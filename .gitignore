@@ -1,0 +1,5 @@
+packages/
+EventManager.Tests/obj/
+EventManager.Tests/bin/
+EventManager/bin/
+EventManager/obj/
