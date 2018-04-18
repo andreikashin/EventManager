@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using EventManager.Models;
+using EventManager.ViewModels;
 
 namespace EventManager.Controllers
 {
@@ -35,8 +36,13 @@ namespace EventManager.Controllers
         // GET: Events/Create
         public ActionResult Create()
         {
-            ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address");
-            return View();
+            var locations = _db.Locations.ToList();
+            var viewModel = new CreateEventViewModel
+            {
+                Locations = locations
+            };
+            
+            return View(viewModel);
         }
 
         // POST: Events/Create
@@ -44,17 +50,17 @@ namespace EventManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,LocationId,Name,DateTime,Info")] Event e)
+        public ActionResult Create(CreateEventViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Events.Add(e);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(viewModel);
             }
+            _db.Events.Add(viewModel.Event);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
 
-            ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
-            return View(e);
+            //ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
         }
 
         // GET: Events/Edit/5
@@ -69,8 +75,14 @@ namespace EventManager.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
-            return View(e);
+
+            var viewModel = new CreateEventViewModel
+            {
+                Event = e,
+                Locations = _db.Locations.ToList()
+            };
+            //ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.LocationId);
+            return View(viewModel);
         }
 
         // POST: Events/Edit/5
@@ -78,16 +90,16 @@ namespace EventManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,LocationId,Name,DateTime,Info")] Event e)
+        public ActionResult Edit(CreateEventViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _db.Entry(e).State = EntityState.Modified;
+                _db.Entry(viewModel.Event).State = EntityState.Modified;
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
-            return View(e);
+            //ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
+            return View(viewModel);
         }
 
         // GET: Events/Delete/5
