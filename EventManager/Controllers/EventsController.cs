@@ -25,7 +25,7 @@ namespace EventManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var e = _db.Events.Find(id);
+            var e = _db.Events.FirstOrDefault(x => x.Id == id);
             if (e == null)
             {
                 return HttpNotFound();
@@ -37,7 +37,7 @@ namespace EventManager.Controllers
         public ActionResult Create()
         {
             var locations = _db.Locations.ToList();
-            var viewModel = new CreateEventViewModel
+            var viewModel = new EventViewModel
             {
                 Locations = locations
             };
@@ -50,7 +50,7 @@ namespace EventManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateEventViewModel viewModel)
+        public ActionResult Create(EventViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -70,13 +70,13 @@ namespace EventManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var e = _db.Events.Find(id);
+            var e = _db.Events.FirstOrDefault(x => x.Id == id);
             if (e == null)
             {
                 return HttpNotFound();
             }
 
-            var viewModel = new CreateEventViewModel
+            var viewModel = new EventViewModel
             {
                 Event = e,
                 Locations = _db.Locations.ToList()
@@ -90,16 +90,17 @@ namespace EventManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(CreateEventViewModel viewModel)
+        public ActionResult Edit(EventViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Entry(viewModel.Event).State = EntityState.Modified;
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(viewModel);
             }
+
+            _db.Entry(viewModel.Event).State = EntityState.Modified;
+            _db.SaveChanges();
+            return RedirectToAction("Index");
             //ViewBag.LocationId = new SelectList(_db.Locations, "Id", "Address", e.Location);
-            return View(viewModel);
         }
 
         // GET: Events/Delete/5
@@ -109,7 +110,7 @@ namespace EventManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var e = _db.Events.Find(id);
+            var e = _db.Events.FirstOrDefault(x => x.Id == id);
             if (e == null)
             {
                 return HttpNotFound();
@@ -122,7 +123,7 @@ namespace EventManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var e = _db.Events.Find(id);
+            var e = _db.Events.FirstOrDefault(x => x.Id == id);
             if (e != null)
             {
                 _db.Events.Remove(e);

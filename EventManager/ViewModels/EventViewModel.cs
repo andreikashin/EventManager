@@ -6,7 +6,7 @@ using EventManager.Models;
 
 namespace EventManager.ViewModels
 {
-    public class CreateEventViewModel
+    public class EventViewModel
     {
         public Event Event { get; set; }
         public IEnumerable<Location> Locations { get; set; }

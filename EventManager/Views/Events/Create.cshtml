@@ -1,95 +1,16 @@
 ﻿@using EventManager.Constants
-@model EventManager.ViewModels.CreateEventViewModel
+@using Resources
+@model EventManager.ViewModels.EventViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = ActionNames.CreateEvent;
+    ViewBag.Action = ActionNames.Create;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>Event</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Event.Location, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(
-                    model => model.Event.LocationId,
-                    new SelectList(Model.Locations, "Id", "Address"),
-                    "Select Location",
-                    new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Event.Location, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Event.Name, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Event.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Event.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Event.DateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Event.DateTime, new { type = "datetime-local" })
-                @Html.ValidationMessageFor(model => model.Event.DateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        
-        @*<div class="form-group">
-            <div class='input-group date' id='datetimepicker1'>
-                <input type='text' class="form-control" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-            <script type="text/javascript">
-                $(function () {
-                    $('#datetimepicker1').datetimepicker();
-                });
-            </script>
-        </div>*@
-        
-        <div class="form-group">
-            @Html.LabelFor(model => model.Event.DurationInHours, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(
-                    model => model.Event.DurationInHours,
-                    new SelectList(Enumerable.Range(1, MaxValue.EVENT_DURATION_HOURS)),
-                    "Select Duration",
-                    new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Event.DurationInHours, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Event.Info, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Event.Info, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Event.Info, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+@Html.Partial("_EventForm", Model)
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

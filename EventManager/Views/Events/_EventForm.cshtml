@@ -1,0 +1,84 @@
+﻿@using EventManager.Constants
+@using Resources
+@model EventManager.ViewModels.EventViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+        
+    <hr/>
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.Event.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Event.Location, new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+                    model => model.Event.LocationId,
+                    new SelectList(Model.Locations, "Id", "Address"),
+                    "Select Location",
+                    new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Event.Location, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Event.Name, new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Event.Name, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Event.Name, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Event.DateTime, new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Event.DateTime, new {@class = "form-control", type = "datetime-local"})
+                @Html.ValidationMessageFor(model => model.Event.DateTime, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker();
+                    });
+                </script>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Event.DurationInHours, new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+                    model => model.Event.DurationInHours,
+                    new SelectList(Enumerable.Range(1, MaxValue.EVENT_DURATION_HOURS)),
+                    "Select Duration",
+                    new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Event.DurationInHours, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Event.Info, new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Event.Info, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Event.Info, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="@ActionNames.Cancel" class="btn btn-default" onclick="location.href = '@Url.Action("Index")'"/>
+                <input type="submit" value="@ViewBag.Action" class="btn btn-primary"/>
+            </div>
+        </div>
+    </div>
+}
